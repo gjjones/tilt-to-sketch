@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+
+  <title>Tilt to sketch</title>
+
+  <link rel="stylesheet" href="./styles/normalize.css"></link>
+  <link rel="stylesheet" href="./styles/styles.css"></link>
+  <style class="orientation"></style>
+</head>
+<body>
+  <script id="menu-template" type="text/x-handlebars-template">
+    <h1 class="title">
+      Tilt Sketch
+    </h1>
+    <div class="menu">
+      <div class="menu__item menu__item--canvas">Draw!</div>
+    </div>
+  </script>
+  <script id="canvas-template" type="text/x-handlebars-template">
+    <canvas class="Absolute-Center is-Fixed rotate-with-screen"></canvas>
+  </script>
+
+  <script src="./lib/jquery-2.1.1.min.js"></script>
+  <script src="./lib/handlebars-v1.3.0.js"></script>
+  <script src="./lib/underscore-min.js"></script>
+  <script src="./lib/backbone-min.js"></script>
+  <script src="./lib/three.js"></script>
+  <script src="./engines/orientation.js"></script>
+  <script src="./pages/menu.js"></script>
+  <script src="./pages/canvas.js"></script>
+  <script src="./router/router.js"></script>
+
+  <!-- Start the app! -->
+  <script src="./index.js"></script>
+
+
+  <script>
+  (function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=
+    function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;
+  e=o.createElement(i);r=o.getElementsByTagName(i)[0];
+  e.src='//www.google-analytics.com/analytics.js';
+  r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));
+  ga('create','UA-44681656-1');ga('send','pageview');
+  </script>
+</body>
+</html>

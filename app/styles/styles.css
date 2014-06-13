@@ -1,0 +1,59 @@
+html,
+body {
+  height: 100%;
+  margin: 0;
+  overflow: hidden;
+  cursor: default;
+}
+#page {
+  height: 100%;
+}
+
+.page--canvas {
+  margin: 0 auto;
+  background: #f00;
+}
+
+.Center-Container {
+  position: relative;
+}
+
+.Absolute-Center {
+  position: absolute;
+  top: 0; left: 0; bottom: 0; right: 0;
+  margin: auto;
+  overflow: auto;
+}
+.Absolute-Center.is-Fixed {
+  position: fixed;
+  z-index: 999;
+}
+
+.overlay {
+  position: absolute;
+  z-index: 9999;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(127, 127, 127, .5);
+}
+
+.popup {
+  width: 80%;
+  height: 80%;
+  border: 2px solid black;
+  background-color: #fff;
+  text-align: center;
+}
+
+.button {
+  display: inline-block;
+  border: 2px solid black;
+  padding: 10px 15px;
+  background-color: #fff;
+  font-size: 2em;
+}
+.button:not(:first-child) {
+  margin-left: 1em;
+}
