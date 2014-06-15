@@ -7,8 +7,7 @@ $(function () {
 
   app.router = Backbone.Router.extend({
     routes: {
-      '': 'menu',
-      'canvas': 'canvas',
+      '': 'canvas'
     },
 
     currentPage: undefined,

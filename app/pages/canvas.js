@@ -99,32 +99,24 @@ $(function () {
       var $overlay = $('<div class="overlay"/>');
       var $popup = $('<div class="popup Absolute-Center is-Fixed"/>');
       var $cancel = $('<span class="button cancel">Back to Drawing!</span>');
-      var $save = $('<span class="button save">Save</span>');
+      var $dropboxSave = $(generateSaveButton());
       var $clear = $('<span class="button clear">Clear</span>');
-      var $close = $('<span class="button close">Close</span>');
+
       $popup.append($cancel);
-      $popup.append($save);
+      $popup.append($dropboxSave);
       $popup.append($clear);
-      $popup.append($close);
       $overlay.append($popup);
 
       app.paused = true;
 
-      function exitModal () {
-        app.paused = false;
-        $overlay.remove();
-      }
       function returnToDrawing () {
         app.orientation.calibrate();
-        exitModal()
+        app.paused = false;
+        $overlay.remove();
       }
       $cancel.on('click', function (e) {
         e.stopPropagation();
         returnToDrawing();
-      }.bind(this));
-      $save.on('click', function (e) {
-        e.stopPropagation();
-        this.saveImage();
       }.bind(this));
       $clear.on('click', function (e) {
         e.stopPropagation();
@@ -135,11 +127,6 @@ $(function () {
         this.ctx.fillStyle="white";
         this.ctx.fillRect(0, 0, canvasWidth, canvasHeight);
         returnToDrawing();
-      }.bind(this));
-      $close.on('click', function (e) {
-        e.stopPropagation();
-        exitModal();
-        window.router.navigate('', {trigger: true});
       }.bind(this));
       $('body').append($overlay);
     },
@@ -154,5 +141,19 @@ $(function () {
       this.remove();
     }
   });
+
+  function generateSaveButton () {
+    var canvasURI = $('.drawing-surface')[0].toDataURL(),
+      now = new Date(),
+      fileName = [
+        'sketch ',
+        now.toLocaleTimeString(),
+        ' ',
+        now.toLocaleDateString(),
+        '.png'
+      ].join('');
+    var button = Dropbox.createSaveButton(canvasURI, fileName);
+    return button;
+  }
 
 });

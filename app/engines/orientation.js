@@ -31,7 +31,7 @@ $(function () {
 
   Orientation = app.engines.Orientation = function () {
       // only get this one at startup for autocorrecting orientation
-      this.startOrientation = window.orientation;
+      this.startOrientation = window.orientation || 0;
 
       this.reporter = window;
       this.$reporter = $(window);
@@ -49,7 +49,7 @@ $(function () {
       this.reporter.addEventListener("orientationchange", this.rotateHandler.bind(this));
   };
   Orientation.prototype.initBase = function() {
-    this.baseOrientation = window.orientation;
+    this.baseOrientation = window.orientation || 0;
     this.transform = pointTransformGenerator(this.baseOrientation);
     this.rotateHandler();
   };
