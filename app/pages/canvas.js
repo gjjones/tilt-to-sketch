@@ -16,6 +16,10 @@ $(function () {
 
     initialize: function () {
       this.pen = {x: 0, y: 0};
+
+      this.canvasWidth = 600;
+      this.canvasHeight = 400;
+      this.canvasHtoW = this.canvasHeight / this.canvasWidth;
     },
 
     attachEvents: function () {
@@ -30,9 +34,17 @@ $(function () {
       app.orientation.unbind('update', this.boundOrientationHandler);
     },
 
-    resizeHandler: function (e) {
-      this.$el.height($(window).height());
-      this.$el.width($(window).width());
+    resizeHandler: function () {
+      var screenHtoW = window.innerHeight / window.innerWidth;
+
+      if (this.canvasHtoW > screenHtoW) {
+        this.$canvas.css('height', window.innerHeight + 'px');
+        this.$canvas.css('width', (window.innerHeight / this.canvasHtoW) + 'px');
+      }
+      else {
+        this.$canvas.css('height', (window.innerWidth * this.canvasHtoW) + 'px');
+        this.$canvas.css('width', window.innerWidth + 'px');
+      }
     },
 
     orientationHandler: function (e) {
@@ -45,18 +57,13 @@ $(function () {
       var template = Handlebars.compile(source);
       this.$el.html(template);
 
-
-      this.$el.height($(window).height());
-      this.$el.width($(window).width());
-
       this.$canvas = this.$el.find('canvas');
-      this.$canvas.width(Math.round(this.$el.width() * 0.75));
-      this.$canvas.height(Math.round(this.$el.height() * 0.85));
-      this.$canvas.attr('width', this.$canvas.css('width'));
-      this.$canvas.attr('height', this.$canvas.css('height'));
+      this.$canvas.attr('width', screen.width);
+      this.$canvas.attr('height', screen.height);
+      this.resizeHandler();
 
-      var canvasWidth = this.$canvas.css('width').match(/\d+/)[0]|0;
-      var canvasHeight = this.$canvas.css('height').match(/\d+/)[0]|0;
+      var canvasWidth = parseInt(this.$canvas.attr('width'));
+      var canvasHeight = parseInt(this.$canvas.attr('height'));
       this.ctx = this.$canvas[0].getContext('2d');
       this.ctx.fillStyle="white";
       this.ctx.fillRect(0, 0, canvasWidth, canvasHeight);
