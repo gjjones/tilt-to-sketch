@@ -50,6 +50,7 @@ $(function () {
   };
   Orientation.prototype.initBase = function() {
     this.baseOrientation = window.orientation || 0;
+    this.prevRotation = window.orientation || 0;
     this.transform = pointTransformGenerator(this.baseOrientation);
     this.rotateHandler();
   };
@@ -95,18 +96,10 @@ $(function () {
     this.trigger('update', this.transform({deltaX: deltaX, deltaY: deltaY}));
   };
   Orientation.prototype.rotateHandler = function () {
-    var $orientationStyle = $('.orientation');
-    var orientationChange = this.baseOrientation - window.orientation;
-    if (orientationChange === 0) {
-      $orientationStyle.html("");
-    } else {
-      $orientationStyle.html([
-        ".rotate-with-screen{",
-          "-webkit-transform:rotate(",orientationChange,"deg);",
-          "transform:rotate(",orientationChange,"deg);",
-        "}",
-      ].join(""));
-    }
+    var deltaRotation = this.prevRotation - window.orientation;
+    this.prevRotation = window.orientation;
+    this.transform = pointTransformGenerator(window.orientation);
+    this.trigger('deltaRotation', {deltaRotation: deltaRotation});
   };
 
   _.extend(Orientation.prototype, Backbone.Events);

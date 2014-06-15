@@ -17,8 +17,8 @@ $(function () {
     initialize: function () {
       this.pen = {x: 0, y: 0};
 
-      this.canvasWidth = 600;
-      this.canvasHeight = 400;
+      this.canvasWidth = screen.width;
+      this.canvasHeight = screen.height;
       this.canvasHtoW = this.canvasHeight / this.canvasWidth;
     },
 
@@ -28,10 +28,14 @@ $(function () {
 
       this.boundOrientationHandler = this.orientationHandler.bind(this)
       app.orientation.bind('update', this.boundOrientationHandler);
+
+      this.boundRotationHandler = this.rotationHandler.bind(this)
+      app.orientation.bind('deltaRotation', this.boundRotationHandler);
     },
     removeEvents: function () {
       $(window).off("resize", this.boundResizeHandler);
       app.orientation.unbind('update', this.boundOrientationHandler);
+      app.orientation.unbind('deltaRotation', this.boundRotationHandler);
     },
 
     resizeHandler: function () {
@@ -52,6 +56,16 @@ $(function () {
         this.addPoint(-e.deltaX, -e.deltaY);
     },
 
+    rotationHandler: function (e) {
+      this.pen = pointRotate(e.deltaRotation, this.pen, this.canvasWidth, this.canvasHeight);
+
+      this.$canvas.rotate(e.deltaRotation)
+
+      this.canvasWidth = this.$canvas.attr('width');
+      this.canvasHeight = this.$canvas.attr('height');
+      this.canvasHtoW = this.canvasHeight / this.canvasWidth;
+    },
+
     render: function() {
       var source = $("#canvas-template").html();
       var template = Handlebars.compile(source);
@@ -70,19 +84,18 @@ $(function () {
 
       this.pen.x = this.$canvas.width() / 2;
       this.pen.y = this.$canvas.height() / 2;
-      this.ctx.moveTo(this.pen.x, this.pen.y);
 
       return this;
     },
 
     penBoundsLimiter: function () {
-      if (this.pen.x > this.$canvas.width()) {
-        this.pen.x = this.$canvas.width();
+      if (this.pen.x > this.$canvas.attr('width')) {
+        this.pen.x = this.$canvas.attr('width');
       } else if (this.pen.x < 0) {
         this.pen.x = 0;
       }
-      if (this.pen.y > this.$canvas.height()) {
-        this.pen.y = this.$canvas.height();
+      if (this.pen.y > this.$canvas.attr('height')) {
+        this.pen.y = this.$canvas.attr('height');
       } else if (this.pen.y < 0) {
         this.pen.y = 0;
       }
@@ -127,10 +140,8 @@ $(function () {
       }.bind(this));
       $clear.on('click', function (e) {
         e.stopPropagation();
-        var cssWidth = this.$canvas.css('width').match(/\d+/)[0];
-        var cssHeight = this.$canvas.css('height').match(/\d+/)[0];
-        var canvasWidth = cssWidth|0;
-        var canvasHeight = cssHeight|0;
+        var canvasWidth = parseInt(this.$canvas.attr('width'));
+        var canvasHeight = parseInt(this.$canvas.attr('height'));
         this.ctx.fillStyle="white";
         this.ctx.fillRect(0, 0, canvasWidth, canvasHeight);
         returnToDrawing();
@@ -148,6 +159,21 @@ $(function () {
       this.remove();
     }
   });
+
+  function pointRotate (difference, point, width, height) {
+    if (difference === 0) {
+      return point;
+    }
+    else if (difference === 90) {
+      return {x: height - point.y, y: point.x};
+    }
+    else if (difference === -90) {
+      return {x: point.y, y: width - point.x};
+    }
+    else if (difference === 180) {
+      return {x: width - point.x, y: height - point.y};
+    }
+  }
 
   function generateSaveButton () {
     var canvasURI = $('.drawing-surface')[0].toDataURL(),
